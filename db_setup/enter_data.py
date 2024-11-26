@@ -3,7 +3,7 @@ import csv
 import json
 
 # Load the database connection details from the JSON file
-with open('db_config.json', 'r') as config_file:
+with open('./db_setup/db_admin.json', 'r') as config_file:
     config = json.load(config_file)
 
 # Connect to the MariaDB database
@@ -21,16 +21,18 @@ def purge_tables():
     drop_tierarten_table = "DROP TABLE IF EXISTS tierarten;"
     drop_users_table = "DROP TABLE IF EXISTS users;"
 
+    cursor = connection.cursor()
     try:
-        with connection.cursor() as cursor:
-            cursor.execute(drop_sichtungen_table)
-            cursor.execute(drop_tierarten_table)
-            cursor.execute(drop_users_table)
+        cursor.execute(drop_sichtungen_table)
+        cursor.execute(drop_tierarten_table)
+        cursor.execute(drop_users_table)
         connection.commit()
         print("Existing tables purged.")
     except mysql.connector.Error as e:
         print(f"Error purging tables: {e}")
         connection.rollback()
+    finally:
+        cursor.close()
 
 # Create tables
 def create_tables():
@@ -72,16 +74,18 @@ def create_tables():
         FOREIGN KEY (tierart_id) REFERENCES tierarten(tierart_id)
     );
     """
+    cursor = connection.cursor()
     try:
-        with connection.cursor() as cursor:
-            cursor.execute(create_users_table)
-            cursor.execute(create_tierarten_table)
-            cursor.execute(create_sichtungen_table)
+        cursor.execute(create_users_table)
+        cursor.execute(create_tierarten_table)
+        cursor.execute(create_sichtungen_table)
         connection.commit()
         print("Tables created successfully.")
     except mysql.connector.Error as e:
         print(f"Error creating tables: {e}")
         connection.rollback()
+    finally:
+        cursor.close()
 
 # Insert data into tierarten from CSV
 def insert_tierarten():
@@ -90,24 +94,29 @@ def insert_tierarten():
     VALUES (%s, %s, %s, %s, %s)
     ON DUPLICATE KEY UPDATE tierart=VALUES(tierart);
     """
+    cursor = connection.cursor()
     try:
-        with open('tierarten.csv', 'r', encoding='utf-8') as csvfile:
+        with open('./db_setup/tierarten.csv', 'r', encoding='utf-8') as csvfile:
             csvreader = csv.reader(csvfile)
             next(csvreader)  # Skip the header row
             data = [tuple(row) for row in csvreader]
 
-        with connection.cursor() as cursor:
-            cursor.executemany(insert_tierarten_query, data)
+        cursor.executemany(insert_tierarten_query, data)
         connection.commit()
         print(f"Inserted or updated {len(data)} rows in the tierarten table.")
     except mysql.connector.Error as e:
         print(f"Error inserting data into tierarten: {e}")
         connection.rollback()
+    finally:
+        cursor.close()
 
-# Main script execution
-try:
-    purge_tables()      # Drop existing tables
-    create_tables()     # Create new tables
-    insert_tierarten()  # Insert tierarten data
-finally:
-    connection.close()  # Ensure connection is always closed
+if __name__ == "__main__":
+    try:
+        purge_tables()      # Drop existing tables
+        create_tables()     # Create new tables
+        insert_tierarten()  # Insert tierarten data
+    except any as e:
+        print(f"An error occurred: {e}")
+    finally:
+        print("DB setup completed")
+        connection.close()  # Ensure connection is always closed
