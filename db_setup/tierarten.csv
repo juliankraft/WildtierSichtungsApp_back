@@ -1,0 +1,27 @@
+tierart,wissenschaftlicher_name,familie,gattung,art
+Fuchs,Vulpes vulpes,Canidae,Vulpes,vulpes
+Reh,Capreolus capreolus,Cervidae,Capreolus,capreolus
+Hirsch,Cervus elaphus,Cervidae,Cervus,elaphus
+Gämse,Rupicapra rupicapra,Bovidae,Rupicapra,rupicapra
+Steinbock,Capra ibex,Bovidae,Capra,ibex
+Dachs,Meles meles,Mustelidae,Meles,meles
+Murmeltier,Marmota marmota,Sciuridae,Marmota,marmota
+Eichhörnchen,Sciurus vulgaris,Sciuridae,Sciurus,vulgaris
+Hase,Lepus europaeus,Leporidae,Lepus,europaeus
+Luchs,Lynx lynx,Felidae,Lynx,lynx
+Biber,Castor fiber,Castoridae,Castor,fiber
+Igel,Erinaceus europaeus,Erinaceidae,Erinaceus,europaeus
+Fledermaus,Chiroptera spp.,Chiropteridae,Various,spp.
+Bartgeier,Gypaetus barbatus,Accipitridae,Gypaetus,barbatus
+Adler,Aquila chrysaetos,Accipitridae,Aquila,chrysaetos
+Schneehuhn,Lagopus muta,Phasianidae,Lagopus,muta
+Wildschwein,Sus scrofa,Suidae,Sus,scrofa
+Schwarzstorch,Ciconia nigra,Ciconiidae,Ciconia,nigra
+Wolf,Canis lupus,Canidae,Canis,lupus
+Braunbär,Ursus arctos,Ursidae,Ursus,arctos
+Ringelnatter,Natrix natrix,Colubridae,Natrix,natrix
+Blindschleiche,Anguis fragilis,Anguidae,Anguis,fragilis
+Feuersalamander,Salamandra salamandra,Salamandridae,Salamandra,salamandra
+Alpensalamander,Salamandra atra,Salamandridae,Salamandra,atra
+Grasfrosch,Rana temporaria,Ranidae,Rana,temporaria
+Erdkröte,Bufo bufo,Bufonidae,Bufo,bufo
