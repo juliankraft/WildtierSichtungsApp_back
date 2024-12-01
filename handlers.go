@@ -36,18 +36,27 @@ func (app *App) animalsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *App) saveAnimalHandler(w http.ResponseWriter, r *http.Request) {
+    fmt.Println("saveAnimalHandler called") // Debugging statement
+
     if r.Method != http.MethodPost {
         http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
         return
     }
 
+    // Print the request method and headers
+    fmt.Println("Request Method:", r.Method)
+    fmt.Println("Request Headers:", r.Header)
+
+    // Read the request body
     var dataset map[string]interface{}
     err := json.NewDecoder(r.Body).Decode(&dataset)
     if err != nil {
         http.Error(w, "Error decoding JSON", http.StatusBadRequest)
+        fmt.Println("Error decoding JSON:", err) // Debugging statement
         return
     }
 
+    // Print the received dataset
     fmt.Println("Received dataset:", dataset)
 
     w.Header().Set("Content-Type", "application/json")

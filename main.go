@@ -35,8 +35,10 @@ func main() {
 
 	http.HandleFunc("/", app.indexHandler)
 	http.HandleFunc("/api/v1/animals", app.animalsHandler)
+	http.HandleFunc("/api/v1/saveAnimal", app.saveAnimalHandler)
 
-	http.ListenAndServe(":8089", nil)
+	// Apply CORS middleware
+    http.ListenAndServe(":8089", corsMiddleware(http.DefaultServeMux))
 }
 
 func (app *App) indexHandler(w http.ResponseWriter, r *http.Request) {
