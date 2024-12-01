@@ -61,12 +61,12 @@ def create_tables():
     create_sichtungen_table = """
     CREATE TABLE sichtungen (
     sichtungen_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    -- user_id INT NOT NULL,
     tierart_id INT NOT NULL,
     anzahl_maennlich INT,
     anzahl_weiblich INT,
     anzahl_unbekannt INT,
-    sichtung_date DATE NOT NULL,
+    sichtung_date DATETIME NOT NULL,
     sichtung_location GEOMETRY NOT NULL,
     sichtung_bemerkung TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
