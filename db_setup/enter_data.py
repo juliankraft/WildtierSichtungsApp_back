@@ -60,19 +60,18 @@ def create_tables():
     """
     create_sichtungen_table = """
     CREATE TABLE sichtungen (
-        sichtungen_id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id INT NOT NULL,
-        tierart_id INT NOT NULL,
-        anzahl_maennlich INT NOT NULL,
-        anzahl_weiblich INT NOT NULL,
-        anzahl_unbekannt INT NOT NULL,
-        sichtung_date DATE NOT NULL,
-        sichtung_latitude FLOAT NOT NULL,
-        sichtung_longitude FLOAT NOT NULL,
-        sichtung_bemerkung TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(user_id),
-        FOREIGN KEY (tierart_id) REFERENCES tierarten(tierart_id)
+    sichtungen_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    tierart_id INT NOT NULL,
+    anzahl_maennlich INT,
+    anzahl_weiblich INT,
+    anzahl_unbekannt INT,
+    sichtung_date DATE NOT NULL,
+    sichtung_location GEOMETRY NOT NULL,
+    sichtung_bemerkung TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    -- FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (tierart_id) REFERENCES tierarten(tierart_id)
     );
     """
     cursor = connection.cursor()
