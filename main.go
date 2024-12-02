@@ -34,6 +34,10 @@ func main() {
 	fmt.Println("Starting server on port 8089")
 
 	http.HandleFunc("/", app.indexHandler)
+	
+	http.HandleFunc("/api/v1/usernames", app.getUsernamesHandler)
+	http.HandleFunc("/api/v1/createUser", app.createUserHandler)
+	
 	http.HandleFunc("/api/v1/animals", app.animalsHandler)
 	http.HandleFunc("/api/v1/saveAnimal", app.saveAnimalHandler)
 

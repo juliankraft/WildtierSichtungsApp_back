@@ -1,12 +1,15 @@
 CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
+    user_name VARCHAR(255) NOT NULL UNIQUE,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
+    pwd VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO users (user_name, first_name, last_name, email, pwd)
+VALUES ('kraftjul', 'Julian', 'Kraft', 'kraftjul@students.zhaw.ch', 'passwort');
 
 CREATE TABLE tierarten (
     tierart_id INT AUTO_INCREMENT PRIMARY KEY,
