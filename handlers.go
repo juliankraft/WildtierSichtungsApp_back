@@ -170,7 +170,8 @@ func (app *App) createUserHandler(w http.ResponseWriter, r *http.Request) {
     query := `INSERT INTO users (user_name, first_name, last_name, email, pwd) VALUES (?, ?, ?, ?, ?)`
     _, err = app.DB.Exec(query, user.Username, user.FirstName, user.LastName, user.Email, hashedPassword)
     if err != nil {
-        http.Error(w, "Error inserting user into database", http.StatusInternalServerError)
+		errormessage := fmt.Sprintf("Error inserting user into database: %s", err)
+        http.Error(w, errormessage, http.StatusInternalServerError)
         return
     }
 
