@@ -8,6 +8,12 @@ import (
 	"net/http"
 )
 
+func hashPassword(password string) string {
+    hasher := sha1.New()
+    hasher.Write([]byte(password))
+    return hex.EncodeToString(hasher.Sum(nil))
+}
+
 func (app *App) getUsernamesHandler(w http.ResponseWriter, r *http.Request) {
     if r.Method != http.MethodGet {
         http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
@@ -60,14 +66,9 @@ func (app *App) createUserHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    // Hash the password using SHA-1
-    hasher := sha1.New()
-    hasher.Write([]byte(user.Password))
-    hashedPassword := hex.EncodeToString(hasher.Sum(nil))
-
     // Insert the user into the database
     query := `INSERT INTO users (user_name, first_name, last_name, email, pwd) VALUES (?, ?, ?, ?, ?)`
-    _, err = app.DB.Exec(query, user.Username, user.FirstName, user.LastName, user.Email, hashedPassword)
+    _, err = app.DB.Exec(query, user.Username, user.FirstName, user.LastName, user.Email, hashPassword(user.Password))
     if err != nil {
 		errormessage := fmt.Sprintf("Error inserting user into database: %s", err)
         http.Error(w, errormessage, http.StatusInternalServerError)
@@ -91,14 +92,9 @@ func (app *App) loginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Hash the password using SHA-1
-	hasher := sha1.New()
-	hasher.Write([]byte(user.Password))
-	hashedPassword := hex.EncodeToString(hasher.Sum(nil))
-
 	// Query to check if the user exists
 	query := `SELECT user_name FROM users WHERE user_name = ? AND pwd = ?`
-	row := app.DB.QueryRow(query, user.Username, hashedPassword)
+	row := app.DB.QueryRow(query, user.Username, hashPassword(user.Password))
 
 	var username string
 	err = row.Scan(&username)
