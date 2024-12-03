@@ -64,7 +64,6 @@ func (app *App) createUserHandler(w http.ResponseWriter, r *http.Request) {
     hasher := sha1.New()
     hasher.Write([]byte(user.Password))
     hashedPassword := hex.EncodeToString(hasher.Sum(nil))
-	fmt.Println("Hashed password:", hashedPassword)
 
     // Insert the user into the database
     query := `INSERT INTO users (user_name, first_name, last_name, email, pwd) VALUES (?, ?, ?, ?, ?)`
@@ -77,4 +76,37 @@ func (app *App) createUserHandler(w http.ResponseWriter, r *http.Request) {
 
     w.Header().Set("Content-Type", "application/json")
     json.NewEncoder(w).Encode(map[string]string{"status": "success"})
+}
+
+func (app *App) loginHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var user User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		http.Error(w, "Error decoding JSON", http.StatusBadRequest)
+		return
+	}
+
+	// Hash the password using SHA-1
+	hasher := sha1.New()
+	hasher.Write([]byte(user.Password))
+	hashedPassword := hex.EncodeToString(hasher.Sum(nil))
+
+	// Query to check if the user exists
+	query := `SELECT user_name FROM users WHERE user_name = ? AND pwd = ?`
+	row := app.DB.QueryRow(query, user.Username, hashedPassword)
+
+	var username string
+	err = row.Scan(&username)
+	if err != nil {
+		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }
