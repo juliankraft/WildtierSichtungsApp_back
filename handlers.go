@@ -165,6 +165,7 @@ func (app *App) createUserHandler(w http.ResponseWriter, r *http.Request) {
     hasher := sha1.New()
     hasher.Write([]byte(user.Password))
     hashedPassword := hex.EncodeToString(hasher.Sum(nil))
+	fmt.Println("Hashed password:", hashedPassword)
 
     // Insert the user into the database
     query := `INSERT INTO users (user_name, first_name, last_name, email, pwd) VALUES (?, ?, ?, ?, ?)`
