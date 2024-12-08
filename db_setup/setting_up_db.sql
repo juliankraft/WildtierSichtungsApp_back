@@ -31,6 +31,7 @@ CREATE TABLE sichtungen (
     sichtung_date DATE NOT NULL,
     sichtung_location GEOMETRY NOT NULL,
     phone_location BOOLEAN NOT NULL,
+    accuracy DECIMAL(15,3) NOT NULL,
     sichtung_bemerkung TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id),

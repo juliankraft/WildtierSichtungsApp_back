@@ -84,8 +84,9 @@ func (app *App) saveAnimalHandler(w http.ResponseWriter, r *http.Request) {
 			sichtung_date, 
 			sichtung_location,
 			phone_location,
+			accuracy,
 			sichtung_bemerkung
-		) VALUES (?, ?, ?, ?, ?, ST_GeomFromText(?), ?, ?)
+		) VALUES (?, ?, ?, ?, ?, ST_GeomFromText(?), ?, ?, ?)
 	`
 
 	// Execute the query
@@ -97,6 +98,7 @@ func (app *App) saveAnimalHandler(w http.ResponseWriter, r *http.Request) {
 		sichtungDateString,
 		location,
 		dataset["phone_location"],
+		dataset["accuracy"],
 		dataset["notes"],
 	)
 	if err != nil {
