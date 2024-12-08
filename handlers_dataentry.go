@@ -77,6 +77,7 @@ func (app *App) saveAnimalHandler(w http.ResponseWriter, r *http.Request) {
 	// Prepare the query to insert data into the database
 	query := `
 		INSERT INTO sichtungen (
+			user_id,
 			tierart_id, 
 			anzahl_maennlich, 
 			anzahl_weiblich, 
@@ -86,11 +87,12 @@ func (app *App) saveAnimalHandler(w http.ResponseWriter, r *http.Request) {
 			phone_location,
 			accuracy,
 			sichtung_bemerkung
-		) VALUES (?, ?, ?, ?, ?, ST_GeomFromText(?), ?, ?, ?)
+		) VALUES (?, ?, ?, ?, ?, ?, ST_GeomFromText(?), ?, ?, ?)
 	`
 
 	// Execute the query
 	_, err = app.DB.Exec(query,
+		dataset["user_id"],
 		dataset["animal_id"],
 		dataset["count_male"],
 		dataset["count_female"],
