@@ -1,16 +1,61 @@
 package main
 
 import (
-	"crypto/ecdsa"
 	"crypto/sha1"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
+
 	//jwt-go
 	"github.com/dgrijalva/jwt-go"
 )
 
+func (app *App) CheckJWT(w http.ResponseWriter, r *http.Request) bool {
+	if r.Header.Get("Authorization") == "" {
+		http.Error(w, "No Authorization header", http.StatusUnauthorized)
+		return false
+	}
+	if r.Header.Get("Authorization") == "Bearer" {
+		http.Error(w, "No JWT token", http.StatusUnauthorized)
+		return false
+	}
+	if r.Header.Get("Authorization") == "Bearer " {
+		http.Error(w, "No JWT token", http.StatusUnauthorized)
+		return false
+	}
+	authline := r.Header.Get("Authorization")
+	//extract jwt from header
+	tokenString := authline[7:]
+	//validate jwt
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Don't forget to validate the alg is what you expect:
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
+		return []byte(app.key), nil
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+		fmt.Println(claims["sub"], claims["user_name"])
+	} else {
+		fmt.Println(err)
+	}
+
+	//print token
+	fmt.Println(token)
+	if token.Valid {
+		return true
+	}
+	//extract
+	return false
+}
 func hashPassword(password string) string {
 	hasher := sha1.New()
 	hasher.Write([]byte(password))
@@ -83,25 +128,38 @@ func (app *App) createUserHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }
 
-var (
-	key *ecdsa.PrivateKey
-	t   *jwt.Token
-	s   string
-)
+// var (
+// 	key *ecdsa.PrivateKey
+// 	t   *jwt.Token
+// 	s   string
+// )
+//
+// func (app *App) createNewJwtToken(u User) string {
+// 	key = app.key
+// 	t = jwt.NewWithClaims(jwt.SigningMethodES256,
+// 		jwt.MapClaims{
+// 			"iss":      "tokenprovider",
+// 			"sub":      u.ID,
+// 			"username": u.Username,
+// 		})
+// 	s, err := t.SignedString(key)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+// 	return s
+// }
 
 func (app *App) createNewJwtToken(u User) string {
-	key = app.key
-	t = jwt.NewWithClaims(jwt.SigningMethodES256,
-		jwt.MapClaims{
-			"iss":      "tokenprovider",
-			"sub":      u.ID,
-			"username": u.Username,
-		})
-	s, err := t.SignedString(key)
-	if err != nil {
-		fmt.Println(err)
-	}
-	return s
+	// Create a new token object, specifying signing method and the claims
+	// you would like it to contain.
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id":  u.ID,
+		"username": u.Username,
+	})
+	// Sign and get the complete encoded token as a string using the secret
+	tokenString, err := token.SignedString([]byte(app.key))
+	fmt.Println(tokenString, err)
+	return tokenString
 }
 
 func (app *App) loginHandler(w http.ResponseWriter, r *http.Request) {

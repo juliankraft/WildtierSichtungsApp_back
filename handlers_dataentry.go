@@ -13,6 +13,12 @@ type Animal struct {
 }
 
 func (app *App) animalsHandler(w http.ResponseWriter, r *http.Request) {
+	//check if the jwt is valid
+	if !app.CheckJWT(w, r) {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("Unauthorized"))
+		return
+	}
 	rows, err := app.DB.Query("SELECT tierart_id,tierart FROM tierarten order by tierart")
 	if err != nil {
 		fmt.Println("Error querying database")
@@ -37,6 +43,11 @@ func (app *App) animalsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *App) saveAnimalHandler(w http.ResponseWriter, r *http.Request) {
+	if !app.CheckJWT(w, r) {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("Unauthorized"))
+		return
+	}
 	fmt.Println("saveAnimalHandler called") // Debugging statement
 
 	if r.Method != http.MethodPost {
