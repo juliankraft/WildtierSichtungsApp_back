@@ -8,9 +8,6 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO users (user_name, first_name, last_name, email, pwd)
-VALUES ('kraftjul', 'Julian', 'Kraft', 'kraftjul@students.zhaw.ch', 'passwort');
-
 CREATE TABLE tierarten (
     tierart_id INT AUTO_INCREMENT PRIMARY KEY,
     tierart VARCHAR(255) NOT NULL UNIQUE,
