@@ -27,10 +27,10 @@ func (app *App) getData(w http.ResponseWriter, r *http.Request) {
                 s.sichtungen_id, 
                 u.user_name, 
                 t.tierart, 
-                s.anzahl_maennlich, 
-                s.anzahl_weiblich, 
-                s.anzahl_unbekannt, 
-                s.sichtung_bemerkung, 
+                ifNull(s.anzahl_maennlich, 0) as anzahl_maennlich,
+                ifNull(s.anzahl_weiblich, 0) as anzahl_weiblich,
+                ifNull(s.anzahl_unbekannt, 0) as anzahl_unbekannt, 
+                ifNull(s.sichtung_bemerkung, "") as sichtung_bemerkung,
                 s.sichtung_date, 
                 ST_X(s.sichtung_location) AS lng, 
                 ST_Y(s.sichtung_location) AS lat
@@ -59,7 +59,7 @@ func (app *App) getData(w http.ResponseWriter, r *http.Request) {
 			&s.SichtungDate, 
 			&s.Location.Lng, 
 			&s.Location.Lat)
-			
+
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Error scanning row: %v", err), http.StatusInternalServerError)
 			return

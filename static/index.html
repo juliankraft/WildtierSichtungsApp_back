@@ -1,53 +1,149 @@
-<html>
-    <head>
-        <title>Sichtungen</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-        <!-- load jquery, datatable and bootstrap from cdn -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sichtungen</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUdbt6OIXegrQRsGuyrHZSolhEtiZoAIk"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sichtungen</h1>
 
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-        <!-- https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css -->
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
-        <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
-    </head>
+    <!-- Map -->
+    <div id="map"></div>
 
-    <!-- basic bootsrap page with nice paddings -->
-    <body>
-        <div class="container">
-            <h1>Sichtungen</h1>
-            <table id="sightings" class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Species</th>
-                        <th>Location</th>
-                        <th>Count</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
+    <!-- Sort (Handled by DataTables.net) -->
+    <div>
+        <!-- Sorting UI can be optional with DataTables -->
+    </div>
 
-<script>
-        $(document).ready(function() {
-            $('#sightings').DataTable({
-                "ajax": {
-                    "url": "sightings.php",
-                    "dataSrc": ""
-                },
-                "columns": [
-                    { "data": "id" },
-                    { "data": "species" },
-                    { "data": "location" },
-                    { "data": "count" },
-                    { "data": "date" }
-                ]
+    <!-- List -->
+    <table id="data-table" class="display">
+        <thead>
+            <tr>
+                <th>Sichtung ID</th>
+                <th>User Name</th>
+                <th>Tierart</th>
+                <th>Anzahl Männlich</th>
+                <th>Anzahl Weiblich</th>
+                <th>Anzahl Unbekannt</th>
+                <th>Bemerkung</th>
+                <th>Date</th>
+                <th>Location</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        let map;
+        let markers = [];
+        let data = [];
+        let dataTable;
+    
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 0, lng: 0 },
+                zoom: 2
             });
-        });
-        </script>
-    </body>
+            fetchData();
+            setInterval(fetchData, 5000); // Reload data every 5 seconds
+        }
+    
+        async function fetchData() {
+            console.log("Fetching data...");
+            const response = await fetch('/api/v1/getData'); // Adjust the API endpoint
+            const newData = await response.json();
+    
+            if (JSON.stringify(newData) !== JSON.stringify(data)) {
+                console.log("Data updated");
+                data = newData;
+                updateTable(data);
+                renderMap(data);
+            } else {
+                console.log("No new data");
+            }
+        }
+    
+        function initializeTable(data) {
+            // Initialize DataTable
+            dataTable = $('#data-table').DataTable({
+                data: data,
+                columns: [
+                    { data: 'sichtungen_id' },
+                    { data: 'user_name' },
+                    { data: 'tierart' },
+                    { data: 'anzahl_maennlich' },
+                    { data: 'anzahl_weiblich' },
+                    { data: 'anzahl_unbekannt' },
+                    { data: 'sichtung_bemerkung' },
+                    { data: 'sichtung_date' },
+                    {
+                        data: 'sichtung_location',
+                        render: (data) => `${data.lat}, ${data.lng}`
+                    }
+                ],
+                pageLength: 5 // Set default rows per page
+            });
+    
+            // Hook into DataTables' search event
+            $('#data-table').on('search.dt', () => {
+                const filteredData = dataTable.rows({ search: 'applied' }).data().toArray();
+                renderMap(filteredData);
+            });
+        }
+    
+        function updateTable(newData) {
+            // Update DataTable with new data
+            if (dataTable) {
+                dataTable.clear();
+                dataTable.rows.add(newData);
+                dataTable.draw();
+            } else {
+                initializeTable(newData);
+            }
+        }
+    
+        function renderMap(filteredData) {
+            // Clear existing markers
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+    
+            // Add new markers for the filtered data
+            filteredData.forEach(row => {
+                const marker = new google.maps.Marker({
+                    position: { lat: row.sichtung_location.lat, lng: row.sichtung_location.lng },
+                    map: map
+                });
+                markers.push(marker);
+            });
+    
+            // Adjust map bounds to fit the filtered markers
+            if (filteredData.length > 0) {
+                const bounds = new google.maps.LatLngBounds();
+                filteredData.forEach(row => {
+                    bounds.extend({ lat: row.sichtung_location.lat, lng: row.sichtung_location.lng });
+                });
+                map.fitBounds(bounds);
+            } else {
+                map.setCenter({ lat: 0, lng: 0 });
+                map.setZoom(2);
+            }
+        }
+    
+        window.onload = initMap;
+    </script>
+    
+</body>
 </html>

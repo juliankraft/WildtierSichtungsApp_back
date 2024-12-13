@@ -24,6 +24,9 @@
 <body>
     <h1>Sichtungen</h1>
 
+    <!-- Map -->
+    <div id="map"></div>
+
     <!-- Filters -->
     <div>
         <label for="tierart">Tierart:</label>
@@ -65,8 +68,7 @@
         </tbody>
     </table>
 
-    <!-- Map -->
-    <div id="map"></div>
+    
 
     <script>
         let map;
@@ -82,11 +84,14 @@
         }
 
         async function fetchData() {
-            const response = await fetch('/data'); // adjust Endpoint
+            console.log("Fetching data...");
+            const response = await fetch('/api/v1/getData'); // adjust Endpoint
             data = await response.json();
             renderTable(data);
             renderMap(data);
         }
+
+        setInterval(fetchData, 5000);
 
         function renderTable(filteredData) {
             const tableBody = document.getElementById("data-table");

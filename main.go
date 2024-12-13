@@ -51,7 +51,7 @@ func main() {
 	http.HandleFunc("/api/v1/animals", app.animalsHandler)
 	http.HandleFunc("/api/v1/saveAnimal", app.saveAnimalHandler)
 
-	http.HandleFunc("/api/v1/getanimals", app.getData)
+	http.HandleFunc("/api/v1/getData", app.getData)
 
 	//serve static files in /app (the ionic app) and /static (the website)
 	http.Handle("/app/", http.StripPrefix("/app/", http.FileServer(http.Dir("app"))))
