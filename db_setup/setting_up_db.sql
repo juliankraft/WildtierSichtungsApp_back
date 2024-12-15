@@ -25,7 +25,7 @@ CREATE TABLE sichtungen (
     anzahl_maennlich INT,
     anzahl_weiblich INT,
     anzahl_unbekannt INT,
-    sichtung_date DATE NOT NULL,
+    sichtung_date DATETIME NOT NULL,
     sichtung_location GEOMETRY NOT NULL,
     phone_location BOOLEAN NOT NULL,
     accuracy DECIMAL(15,3) NOT NULL,

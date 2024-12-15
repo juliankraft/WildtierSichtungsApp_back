@@ -65,6 +65,7 @@
             console.log("Fetching data...");
             const response = await fetch('/api/v1/getData'); // Adjust the API endpoint
             const newData = await response.json();
+            console.log(newData);
     
             if (JSON.stringify(newData) !== JSON.stringify(data)) {
                 console.log("Data updated");
