@@ -3,29 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wildtier Sichtungen - Data</title>
+    <title>Wildtier Sichtungen - Data inframe</title>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUdbt6OIXegrQRsGuyrHZSolhEtiZoAIk"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <style>
         #map {
-            height: 400px;
-            width: 100%;
+            height: 350px; /* Map height */
+            width: 80%; /* Map width */
             margin-bottom: 20px;
+            margin-left: auto;
+            margin-right: auto; /* Center horizontally */
+            display: block; /* Required for margin auto to work */
+        }
+
+        /* Add this to scale the entire page */
+        body {
+            transform: scale(0.6); /* Adjust scale factor as needed */
+            transform-origin: top left; /* Ensure scaling starts from top-left corner */
+            width: 125%; /* Compensate for the scale to prevent clipping */
         }
     </style>
 </head>
 <body>
-    <h1>Wildtier Sichtungen</h1>
 
     <!-- Map -->
     <div id="map"></div>
-
-    <!-- Sort (Handled by DataTables.net) -->
-    <div>
-        <!-- Sorting UI can be optional with DataTables -->
-    </div>
 
     <!-- List -->
     <table id="data-table" class="display">
@@ -51,7 +55,7 @@
         let markers = [];
         let data = [];
         let dataTable;
-    
+
         function initMap() {
             map = new google.maps.Map(document.getElementById("map"), {
                 center: { lat: 0, lng: 0 },
@@ -60,13 +64,13 @@
             fetchData();
             setInterval(fetchData, 5000); // Reload data every 5 seconds
         }
-    
+
         async function fetchData() {
             console.log("Fetching data...");
             const response = await fetch('/api/v1/getData'); // Adjust the API endpoint
             const newData = await response.json();
             console.log(newData);
-    
+
             if (JSON.stringify(newData) !== JSON.stringify(data)) {
                 console.log("Data updated");
                 data = newData;
@@ -76,9 +80,8 @@
                 console.log("No new data");
             }
         }
-    
+
         function initializeTable(data) {
-            // Initialize DataTable
             dataTable = $('#data-table').DataTable({
                 data: data,
                 columns: [
@@ -100,16 +103,14 @@
                     url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/de-DE.json" // German language file
                     }
             });
-    
-            // Hook into DataTables' search event
+
             $('#data-table').on('search.dt', () => {
                 const filteredData = dataTable.rows({ search: 'applied' }).data().toArray();
                 renderMap(filteredData);
             });
         }
-    
+
         function updateTable(newData) {
-            // Update DataTable with new data
             if (dataTable) {
                 dataTable.clear();
                 dataTable.rows.add(newData);
@@ -118,13 +119,11 @@
                 initializeTable(newData);
             }
         }
-    
+
         function renderMap(filteredData) {
-            // Clear existing markers
             markers.forEach(marker => marker.setMap(null));
             markers = [];
-    
-            // Add new markers for the filtered data
+
             filteredData.forEach(row => {
                 const marker = new google.maps.Marker({
                     position: { lat: row.sichtung_location.lat, lng: row.sichtung_location.lng },
@@ -132,8 +131,7 @@
                 });
                 markers.push(marker);
             });
-    
-            // Adjust map bounds to fit the filtered markers
+
             if (filteredData.length > 0) {
                 const bounds = new google.maps.LatLngBounds();
                 filteredData.forEach(row => {
@@ -145,9 +143,9 @@
                 map.setZoom(2);
             }
         }
-    
+
         window.onload = initMap;
     </script>
-    
+
 </body>
 </html>
