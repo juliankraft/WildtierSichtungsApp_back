@@ -10,7 +10,7 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <style>
         #map {
-            height: 350px; /* Map height */
+            height: 300px; /* Map height */
             width: 80%; /* Map width */
             margin-bottom: 20px;
             margin-left: auto;
@@ -98,7 +98,8 @@
                         render: (data) => `${data.lat}, ${data.lng}`
                     }
                 ],
-                pageLength: 5,
+                order: [[0, 'desc']],
+                pageLength: 4,
                 language: {
                     url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/de-DE.json" // German language file
                     }

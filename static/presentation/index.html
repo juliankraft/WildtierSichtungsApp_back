@@ -23,8 +23,12 @@
 ## Inhalt
 
 * Idee
-* Entstehung
-* Prototype
+* Programmiersprache und Frameworks
+* Prototyp
+* Challanges
+* Ausblick
+* Acknowledgements
+* Links
 
 ---
 
@@ -32,45 +36,76 @@
 
 ----
 
-Wie erheben wir Geodaten im Feld?
+Das Kernelement von jedem <span style="display: block;"></span>Geo-Informatik Projekt
+
+<img src="images/geodata_collection.webp" style="width: 40%; margin-bottom: -50px;">
+
+<span style="font-size: 0.4em;">*Abbildung: Generiert mit - DALL-E*</span>
 
 ----
 
-Wie könnten wir Geodaten im Feld erheben?
+Möglichkeiten
+
+<img src="images/frompentophone.webp" style="width: 40%; margin-bottom: -50px;">
+
+<span style="font-size: 0.4em;">*Abbildung: Generiert mit - DALL-E*</span>
 
 ----
 
-Geodaten Erhebung mit Smartphone App
+Das will ich auch können!
 
-### Was ist wichtig?
+<img src="images/frompentophone.webp" style="width: 40%; margin-bottom: -50px;">
 
-----
-
-Einfachheit der App - nur das absolut nötigste
+<span style="font-size: 0.4em;">*Abbildung: Generiert mit - DALL-E*</span>
 
 ----
 
-Datenhoheit - Die Daten sollen selbst verwaltet werden
+WildTierSichtungsApp
 
-----
+<img src="images/webapp.webp" style="width: 40%; margin-bottom: -50px;">
 
-Wiederverwendbarkeit - das Problem einmal lösen und immer wieder verwenden!
-
-----
-
-### Unsere Lösung
-
-Ein open-source Bausatz, um genau das zu ermöglichen
+<span style="font-size: 0.4em;">*Abbildung: Generiert mit - DALL-E*</span>
 
 ---
 
-## Entstehung
+## Programmiersprache und Frameworks
 
 ----
 
-Swot Analyse
+### Frontend
 
-<img src="images/swot.png" style="width: 50%;">
+<img src="images/ionic.png" style="width: 70%; margin-bottom: -50px;">
+
+<span style="font-size: 0.4em;">*Abbildung: von [https://github.com/ionic-team/](https://github.com/ionic-team/ionic-framework)*</span>
+
+----
+
+### Backend
+
+<img src="images/go_logo.jpg" style="width: 50%; margin-bottom: -90px;">
+
+<span style="font-size: 0.4em;">*Abbildung: [https://go.dev/blog/go-brand](https://go.dev/blog/go-brand)*</span>
+
+----
+
+### WebMap
+
+<img src="images/Google_Maps_Logo.png" style="width: 30%; margin-bottom: -40px;">
+
+<span style="font-size: 0.4em;">*Abbildung: [https://en.m.wikipedia.org/](https://en.m.wikipedia.org/wiki/File:Google_Maps_Logo_2020.svg)*</span>
+
+
+----
+
+### Datenbank
+
+<img src="images/mariadb.png" style="width: 40%; margin-bottom: -50px;">
+
+<span style="font-size: 0.4em;">*Abbildung: [https://github.com/mariadb-corporation](https://github.com/mariadb-corporation)*</span>
+
+---
+
+## Prototyp
 
 ----
 
@@ -78,13 +113,15 @@ Logo
 
 <img src="images/logo_app.png" style="width: 30%;">
 
+<span style="font-size: 0.4em;">*Abbildung: Logo - Designed by Annalisa Berger*</span>
+
 ----
 
-Wieso auch lange planen, wenn man auch einfach machen kann?
+Datenbank Struktur
 
----
+<img src="images/db_structure.png" style="width: 40%; margin-bottom: -50px;">
 
-## Prototype
+<span style="font-size: 0.4em;">*Abbildung: Kreiert mit DBeaver*</span>
 
 ----
 
@@ -94,18 +131,97 @@ QR Code um die App zu installieren
 
 ----
 
-So schaut das aus
-<iframe src="https://wildtierapp.juliankraft.ch/app/" width="40%" height="500px"></iframe>
+Demo
+
+<div style="border: 1px solid black; padding: 1px; display: inline-block;">
+    <iframe src="https://wildtierapp.juliankraft.ch/app/" width="95%" height="500px" allow="geolocation"></iframe>
+</div>
 
 ----
 
-Die Daten sind auf einer Website einsehbar:
-https://wildtierapp.juliankraft.ch/
+Data View
+
 <iframe src="https://wildtierapp.juliankraft.ch/inframe" width="100%" height="500px"></iframe>
+
+----
+
+Beispiel für Datenbezug mit Python:
+
+```python
+import mysql.connector
+import json
+
+# Load the database connection details from the JSON file
+with open('./db_setup/db_config.json', 'r') as config_file:
+    config = json.load(config_file)
+
+# Connect to the MariaDB database
+connection = mysql.connector.connect(
+    host=config['host'],
+    port=config['port'],
+    user=config['user'],
+    password=config['password'],
+    database=config['database']
+)
+
+# Function to fetch data from the database
+def get_data(statement):
+    cursor = connection.cursor()
+    try:
+        cursor.execute(statement)
+        data = cursor.fetchall()
+        return data
+    except mysql.connector.Error as e:
+        print(f"Error fetching data: {e}")
+    finally:
+        cursor.close()
+
+# Fetching data example
+
+data = get_data("SELECT * FROM sichtungen;")
+
+
+```
 
 ---
 
-## So viel zu dem
+## Challanges
+
+* Neue Programmiersprachen
+* Neue Frameworks
+* Server Konfiguration
+* Datenbank Konfiguration
+* Login und Authentifizierung
+
+---
+
+## Ausblick
+
+Vom Prototyp zur Anwendung - was wäre noch nötig?
+
+---
+
+## Acknowledgements
+
+Danke an Ramon Ott für die Unterstützung bai der Umsetung dieses Projekts.
+
+Danke an Annalisa Berger für das Design des Logos.
+
+---
+
+## Links
+
+Presentation:
+* [wildtierapp.juliankraft.ch/presentation](https://wildtierapp.juliankraft.ch/presentation)
+
+Prototyp:
+* [WebApp - Installation](https://wildtierapp.juliankraft.ch/app/)
+* [Datensichtung](https://wildtierapp.juliankraft.ch/)
+
+GitHub Repos:
+* [Frontend](https://github.com/juliankraft/WildtierSichtungsApp_front)
+* [Backend](https://github.com/juliankraft/WildtierSichtungsApp_back)
+
 
           </textarea>
         </section>
