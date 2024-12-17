@@ -15,3 +15,7 @@ The Database is a simple MariaDB. The goal was to solve all challenges and get i
 ### Repository Content
 
 This reository contains the backend of the WildTierSichtungsApp. The frontend can be found in the repository [WildTierSichtungsApp-Backend](https://github.com/juliankraft/WildtierSichtungsApp_front)
+
+### License
+
+This project is licensed under the Creative Commons Zero v1.0 Universal License - see the [LICENSE.md](LICENSE.md) file for details.
