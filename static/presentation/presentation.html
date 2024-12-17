@@ -8,9 +8,10 @@
     <link rel="shortcut icon" href="./favicon.ico" />
     <link rel="stylesheet" href="./dist/reset.css" />
     <link rel="stylesheet" href="./dist/reveal.css" />
-    <link rel="stylesheet" href="./dist/theme/simple.css" id="theme" />
+    <link rel="stylesheet" href="./dist/theme/black.css" id="theme" />
     <link rel="stylesheet" href="./css/highlight/github.css" />
 
+    <link rel="stylesheet" href="./_assets/simple_jk.css" />
   </head>
   <body>
     <div class="reveal">
@@ -157,7 +158,7 @@ https://wildtierapp.juliankraft.ch/
       // options from URL query string
       var queryOptions = Reveal().getQueryHash() || {};
 
-      var options = extend(defaultOptions, {"_":["presentation.md"],"static":"/home/jk/go/wildtier_erhebung_backend/static/presentation/"}, queryOptions);
+      var options = extend(defaultOptions, {"_":["presentation.md"],"css":"simple_jk.css","static":"/home/jk/go/wildtier_erhebung_backend/static/presentation/"}, queryOptions);
     </script>
 
 
