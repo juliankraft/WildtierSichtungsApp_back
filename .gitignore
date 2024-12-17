@@ -2,3 +2,5 @@
 
 db_admin.json
 db_config.json
+
+.env
