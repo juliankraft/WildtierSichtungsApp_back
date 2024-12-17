@@ -3,7 +3,7 @@ import csv
 import json
 
 # Load the database connection details from the JSON file
-with open('./db_setup/db_config.json', 'r') as config_file:
+with open('./db_setup/db_admin.json', 'r') as config_file:
     config = json.load(config_file)
 
 # Connect to the MariaDB database
@@ -14,20 +14,6 @@ connection = mysql.connector.connect(
     password=config['password'],
     database=config['database']
 )
-
-# Function to fetch data from the database
-def get_data(statement):
-    cursor = connection.cursor()
-    try:
-        cursor.execute(statement)
-        data = cursor.fetchall()
-        return data
-    except mysql.connector.Error as e:
-        print(f"Error fetching data: {e}")
-    finally:
-        cursor.close()
-
-# Fetching data example
 
 data = get_data("SELECT * FROM sichtungen;")
 
@@ -54,13 +40,13 @@ def purge_tables():
 # Create tables
 def create_tables():
     create_users_table = """
-    CREATE TABLE users (
+        CREATE TABLE users (
         user_id INT AUTO_INCREMENT PRIMARY KEY,
-        username VARCHAR(255) NOT NULL UNIQUE,
+        user_name VARCHAR(255) NOT NULL UNIQUE,
         first_name VARCHAR(255) NOT NULL,
         last_name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL UNIQUE,
-        password_hash VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        pwd VARCHAR(255) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """
@@ -77,18 +63,20 @@ def create_tables():
     """
     create_sichtungen_table = """
     CREATE TABLE sichtungen (
-    sichtungen_id INT AUTO_INCREMENT PRIMARY KEY,
-    -- user_id INT NOT NULL,
-    tierart_id INT NOT NULL,
-    anzahl_maennlich INT,
-    anzahl_weiblich INT,
-    anzahl_unbekannt INT,
-    sichtung_date DATETIME NOT NULL,
-    sichtung_location GEOMETRY NOT NULL,
-    sichtung_bemerkung TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    -- FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (tierart_id) REFERENCES tierarten(tierart_id)
+        sichtungen_id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        tierart_id INT NOT NULL,
+        anzahl_maennlich INT,
+        anzahl_weiblich INT,
+        anzahl_unbekannt INT,
+        sichtung_date DATETIME NOT NULL,
+        sichtung_location GEOMETRY NOT NULL,
+        phone_location BOOLEAN NOT NULL,
+        accuracy DECIMAL(15,3) NOT NULL,
+        sichtung_bemerkung TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(user_id),
+        FOREIGN KEY (tierart_id) REFERENCES tierarten(tierart_id)
     );
     """
     cursor = connection.cursor()

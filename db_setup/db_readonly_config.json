@@ -1,0 +1,7 @@
+{
+    "host": "148.251.155.68",
+    "port": 3306,
+    "user": "readonly",
+    "password": "readonlypwd",
+    "database": "WildtierSichtungen"
+  }
