@@ -1,1 +1,0 @@
-reveal-md ./presentation_md/presentation.md --static ../static/presentation
