@@ -5,7 +5,7 @@
 **Program:**        BSc Natural Resource Sciences
 **Course:**         Angewandte Geoinformatik
 **Project:**        Semester Project  
-**Date:**           2024-12-17
+**Date:**           2024-12-18
 
 ### Description
 
@@ -14,7 +14,12 @@ The Database is a simple MariaDB. The goal was to solve all challenges and get i
 
 ### Repository Content
 
-This reository contains the backend of the WildTierSichtungsApp. The frontend can be found in the repository [WildTierSichtungsApp-Backend](https://github.com/juliankraft/WildtierSichtungsApp_front)
+This reository contains the backend of the WildTierSichtungsApp. 
+
+### Additional Resources:
+
+- Frontend: [WildTierSichtungsApp-Frontend](https://github.com/juliankraft/WildtierSichtungsApp_front)
+- Documentation: [WildTierSichtungsApp-Documentation](https://github.com/juliankraft/WildtierSichtungsApp_documentation)
 
 ### License
 
