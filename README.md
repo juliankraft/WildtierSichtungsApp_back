@@ -22,7 +22,23 @@ demonstrating both the promise and complexity of custom web application developm
 
 ### Repository Content
 
-This reository contains the backend of the WildTierSichtungsApp. 
+This reository contains the backend of the WildTierSichtungsApp, the compiled version of the frontend and a static webpage.
+
+### Repository Structure
+
+/app                        # compiled version of the frontend
+/db_setup                   # scripts to setup the database and access data
+/static                     # static webpage accessible from web
+go.mod                      # Go module file
+go.sum                      # Go module checksum file
+handlers_dataentry.go       # Go file with handlers for data entry
+handlers_login.go           # Go file with handlers for login
+mandlers_table.go           # Go file with handlers data view
+main.go                     # Go file with main function
+middleware.go               # Go file with middleware functions
+server.sh                   # script to run the server
+README.md                   # Project documentation
+LICENSE.md                  # License information
 
 ### Additional Resources:
 
