@@ -7,10 +7,18 @@
 **Project:**        Semester Project  
 **Date:**           2024-12-18
 
-### Description
+### Abstract
 
-For my semester project I developed a simple WebApp that allows users to report wildlife sightings. The app uses the framework Ionic for the frontend and the backend is implemented in GO.
-The Database is a simple MariaDB. The goal was to solve all challenges and get it up and running. In the current state the app is a working prototype not a finished product.
+The project aimed to evaluate the accessibility of modern technology for creating a web application 
+that records geotagged data. Using modern web frameworks, a prototype was developed to document wildlife sightings. 
+This application, accessible online and installable on smartphones across major operating systems, 
+exemplifies how a straightforward and purpose-driven tool can be built with moderate programming knowledge, 
+guided support, and persistence. The project's workflow encompassed backend development in Go, 
+frontend design with the Ionic framework, and database integration using MariaDB. Additionally, 
+the system incorporates a public data visualization tool and direct database access. 
+While the project highlights the potential of current technologies and AI-powered tools like GitHub Copilot, 
+it underscores challenges in managing interconnected components. The result is a versatile platform, 
+demonstrating both the promise and complexity of custom web application development for geospatial data collection.
 
 ### Repository Content
 
